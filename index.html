@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歴史クイズ 〜室町時代（抜粋）〜</title>
+<style>
+  :root{
+    --bg: #faf6ee;
+    --bg-card: #ffffff;
+    --ink: #2c2620;
+    --ink-soft: #6b6055;
+    --accent: #a8452f;
+    --accent-dark: #7c3220;
+    --accent-soft: #f1ded6;
+    --seiji: #c98a3b;
+    --seiji-soft: #f7ead2;
+    --bunka: #4a6fa5;
+    --bunka-soft: #dfe8f5;
+    --good: #2e7d4f;
+    --good-soft: #e0f2e6;
+    --bad: #b3392c;
+    --bad-soft: #fbe3df;
+    --border: #e4dccd;
+    --shadow: 0 4px 16px rgba(60, 45, 25, 0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #1c1712;
+      --bg-card: #2a231c;
+      --ink: #f2ece1;
+      --ink-soft: #b8ac9b;
+      --accent: #e0836a;
+      --accent-dark: #f0a58f;
+      --accent-soft: #3c2b23;
+      --seiji: #e0ac5f;
+      --seiji-soft: #3a2f1e;
+      --bunka: #8fb0e0;
+      --bunka-soft: #212f42;
+      --good: #6fce97;
+      --good-soft: #1c3327;
+      --bad: #e58879;
+      --bad-soft: #3a201d;
+      --border: #423a30;
+      --shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #1c1712;
+    --bg-card: #2a231c;
+    --ink: #f2ece1;
+    --ink-soft: #b8ac9b;
+    --accent: #e0836a;
+    --accent-dark: #f0a58f;
+    --accent-soft: #3c2b23;
+    --seiji: #e0ac5f;
+    --seiji-soft: #3a2f1e;
+    --bunka: #8fb0e0;
+    --bunka-soft: #212f42;
+    --good: #6fce97;
+    --good-soft: #1c3327;
+    --bad: #e58879;
+    --bad-soft: #3a201d;
+    --border: #423a30;
+    --shadow: 0 4px 16px rgba(0,0,0,0.35);
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Meiryo", sans-serif;
+    min-height: 100vh;
+    line-height: 1.7;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .wrap{
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 56px;
+  }
+
+  header.top{
+    text-align: center;
+    padding: 22px 0 8px;
+  }
+  header.top .kicker{
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  header.top h1{
+    margin: 6px 0 2px;
+    font-size: clamp(22px, 5.5vw, 30px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  header.top p.sub{
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  .card{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-top: 18px;
+  }
+
+  h2.section-title{
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+
+  .choice-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 480px){
+    .era-grid{ grid-template-columns: 1fr 1fr 1fr; }
+    .mode-grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  .pick{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+    text-align: left;
+  }
+  .pick:hover{ transform: translateY(-1px); }
+  .pick.selected{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+  }
+  .pick .dot{
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border);
+    flex: none;
+  }
+  .pick.selected .dot{ background: var(--accent); }
+
+  .row-gap{ margin-top: 18px; }
+
+  button.primary{
+    display: block;
+    width: 100%;
+    padding: 15px 18px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(168,69,47,0.28);
+    transition: transform .1s ease, background .15s ease;
+  }
+  button.primary:hover{ background: var(--accent-dark); }
+  button.primary:active{ transform: scale(0.98); }
+  button.primary:disabled{
+    opacity: .5; cursor: not-allowed; box-shadow:none;
+  }
+
+  button.ghost{
+    display: block;
+    width: 100%;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  /* quiz screen */
+  .quiz-meta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .era-tag{
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .era-tag.seiji{ background: var(--seiji-soft); color: var(--seiji); }
+  .era-tag.bunka{ background: var(--bunka-soft); color: var(--bunka); }
+
+  .progress-track{
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill{
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width .3s ease;
+  }
+
+  .question-text{
+    font-size: 18px;
+    font-weight: 700;
+    margin: 4px 0 20px;
+    line-height: 1.75;
+  }
+
+  .choice-btn{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .choice-btn .letter{
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-btn:hover:not(:disabled){ border-color: var(--accent); }
+  .choice-btn:disabled{ cursor: default; }
+
+  .choice-btn.correct{
+    border-color: var(--good);
+    background: var(--good-soft);
+  }
+  .choice-btn.correct .letter{ background: var(--good); color: #fff; }
+
+  .choice-btn.wrong{
+    border-color: var(--bad);
+    background: var(--bad-soft);
+  }
+  .choice-btn.wrong .letter{ background: var(--bad); color: #fff; }
+
+  /* typed (記述式) answer input */
+  .type-input{
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: inherit;
+    margin-bottom: 10px;
+  }
+  .type-input:focus{ outline: none; border-color: var(--accent); }
+  .type-input.correct{ border-color: var(--good); background: var(--good-soft); }
+  .type-input.wrong{ border-color: var(--bad); background: var(--bad-soft); }
+  .type-input:disabled{ opacity: 0.9; }
+  .type-hint{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: -2px 0 10px;
+  }
+
+  .answer-reveal{
+    display: none;
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+  .answer-reveal b{ color: var(--accent-dark); font-size: 16px; }
+
+  .explain{
+    margin-top: 6px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--ink);
+    display: none;
+  }
+  .explain.show{ display: block; }
+  .explain b{ color: var(--accent-dark); }
+
+  /* correct / wrong result badge, shown to the left of "解説：" */
+  .result-badge{
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    margin-right: 8px;
+    vertical-align: middle;
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  .result-badge.show{
+    animation: badge-pop .35s cubic-bezier(.26,1.4,.4,1) forwards;
+  }
+  .result-badge.correct{
+    background: var(--good-soft);
+    color: var(--good);
+    border: 1.5px solid var(--good);
+  }
+  .result-badge.wrong{
+    background: var(--bad-soft);
+    color: var(--bad);
+    border: 1.5px solid var(--bad);
+  }
+  @keyframes badge-pop{
+    0%{ transform: scale(0.6); opacity: 0; }
+    60%{ transform: scale(1.12); opacity: 1; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .result-badge.show{ animation: none; transform: scale(1); opacity: 1; }
+  }
+
+  /* results */
+  .score-hero{
+    text-align: center;
+    padding: 10px 0 6px;
+  }
+  .score-hero .num{
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-hero .denom{
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .score-hero .msg{
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .review-item{
+    border-top: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .review-item:first-child{ border-top: none; }
+  .review-q{ font-weight: 700; font-size: 14.5px; margin-bottom: 6px; }
+  .review-a{ font-size: 13.5px; color: var(--ink-soft); }
+  .review-a .your{ color: var(--bad); font-weight: 700; }
+  .review-a .right{ color: var(--good); font-weight: 700; }
+
+  .hidden{ display: none !important; }
+
+  footer.foot{
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">社会・歴史</div>
+    <h1>室町時代クイズ（抜粋）</h1>
+    <p class="sub">予習シリーズ 第7回のまとめ問題から抜粋した22問</p>
+  </header>
+
+  <!-- ===== SETUP SCREEN ===== -->
+  <div id="screen-setup" class="card">
+    <h2 class="section-title">① 範囲をえらぶ</h2>
+    <div class="choice-grid era-grid" id="era-picker">
+      <div class="pick selected" data-era="all"><span class="dot"></span>ぜんぶ</div>
+      <div class="pick" data-era="seiji"><span class="dot"></span>政治・外交（1〜3・年表）</div>
+      <div class="pick" data-era="bunka"><span class="dot"></span>産業・文化・一揆（4〜7）</div>
+    </div>
+
+    <h2 class="section-title row-gap">② 問題数をえらぶ</h2>
+    <div class="choice-grid era-grid" id="count-picker">
+      <div class="pick" data-count="10"><span class="dot"></span>10問</div>
+      <div class="pick" data-count="20"><span class="dot"></span>20問</div>
+      <div class="pick selected" data-count="all"><span class="dot"></span>全問</div>
+    </div>
+
+    <h2 class="section-title row-gap">③ 回答方法をえらぶ</h2>
+    <div class="choice-grid mode-grid" id="mode-picker">
+      <div class="pick selected" data-mode="choice"><span class="dot"></span>4択（選択式）</div>
+      <div class="pick" data-mode="type"><span class="dot"></span>記述式（入力）</div>
+    </div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-start">クイズをはじめる</button>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SCREEN ===== -->
+  <div id="screen-quiz" class="card hidden">
+    <div class="quiz-meta">
+      <span id="q-counter">問題 1 / 10</span>
+      <span id="q-era-tag" class="era-tag seiji">政治・外交</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-text" id="q-text">問題文がここに入ります</div>
+
+    <div id="choices-holder"></div>
+
+    <div class="explain" id="explain-box">
+      <div class="answer-reveal" id="answer-reveal"></div>
+      <span class="result-badge" id="result-badge"></span>
+      <b>解説：</b><span id="explain-text"></span>
+    </div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-next" disabled>次へ</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div id="screen-result" class="card hidden">
+    <div class="score-hero">
+      <div class="num"><span id="res-score">0</span>/<span id="res-total">0</span></div>
+      <div class="denom">正解</div>
+      <div class="msg" id="res-msg"></div>
+    </div>
+
+    <div id="review-holder" class="row-gap"></div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-retry-wrong" style="background: var(--bad); box-shadow: 0 4px 14px rgba(179,57,44,0.28); display:none;">間違えた問題だけやり直す</button>
+      <button class="primary" id="btn-retry" style="margin-top:10px;">もう一度おなじ設定で挑戦</button>
+      <button class="ghost" id="btn-setting">設定にもどる</button>
+    </div>
+  </div>
+
+  <footer class="foot">全て自分でノートを見直して確認しよう ✎</footer>
+</div>
+
+<script>
+/* ============================================================
+   QUIZ DATA — 室町時代（抜粋22問）　政治・外交(seiji) / 産業・文化・一揆(bunka)
+   alt: 記述式で正解にする別解 / choiceOnly: 4択のときだけ出題
+   ============================================================ */
+const QUESTIONS = [
+  {era:"seiji", q:"足利尊氏が征夷大将軍に任命されたのは何年ですか。", choices:["1192年","1333年","1338年","1378年"], a:2, alt:["1338"], note:"1338年、足利尊氏は征夷大将軍に任命され、京都に幕府を開きました。"},
+  {era:"seiji", q:"室町幕府で、将軍をたすける役職を何といいますか。", choices:["執権","管領","摂政","老中"], a:1, note:"室町幕府で将軍をたすけたのは管領です。鎌倉幕府の「執権」とまちがえやすいので注意！"},
+  {era:"seiji", q:"「執権」と「管領」について正しい組み合わせはどれですか。", choices:["執権＝鎌倉幕府、管領＝室町幕府","執権＝室町幕府、管領＝鎌倉幕府","どちらも鎌倉幕府の役職","どちらも室町幕府の役職"], a:0, choiceOnly:true, note:"将軍をたすける役職は、鎌倉幕府では執権（北条氏）、室町幕府では管領です。"},
+  {era:"seiji", q:"南北朝の合一は何年ですか。", choices:["1338年","1378年","1392年","1404年"], a:2, alt:["1392"], note:"1392年、南朝と北朝が1つにまとめられました（南北朝の合一）。"},
+  {era:"seiji", q:"応仁の乱のきっかけとなったあとつぎ争いは、何代将軍のときですか。", choices:["3代将軍 足利義満","8代将軍 足利義政","初代将軍 足利尊氏","15代将軍 足利義昭"], a:1, choiceOnly:true, note:"応仁の乱は8代将軍足利義政のあとつぎ争いなどから起こりました。"},
+  {era:"seiji", q:"日明貿易が始まったのは何年ですか。", choices:["1392年","1397年","1404年","1429年"], a:2, alt:["1404"], note:"1404年に日明貿易（勘合貿易）が始まりました。"},
+  {era:"seiji", q:"朝鮮との正式な貿易で、日本が朝鮮から輸入したものとして正しいものはどれですか。", choices:["木綿やにんじん（朝鮮にんじん）","銅銭や生糸","鉄砲や火薬","砂糖やこしょう"], a:0, choiceOnly:true, note:"日本は朝鮮から木綿やにんじん（朝鮮にんじん）などを輸入しました。銅銭や生糸は明からの主な輸入品です。"},
+  {era:"seiji", q:"琉球王国が、アジアの各地を結んでさかんに行った貿易を何といいますか。", choices:["中継貿易","勘合貿易","南蛮貿易","朱印船貿易"], a:0, note:"琉球王国は、日本・中国・東南アジアなどを結ぶ中継貿易をさかんに行いました。"},
+  {era:"bunka", q:"同じ田畑で1年に2回、ちがう作物をつくる方法を何といいますか。", choices:["二期作","二毛作","輪作","干拓"], a:1, note:"二毛作は同じ田畑で米と麦など、ちがう作物をつくる方法です。同じ作物を2回つくる「二期作」とまちがえやすい！"},
+  {era:"bunka", q:"二毛作について正しいものはどれですか。", choices:["鎌倉時代に西日本に広まり、室町時代に各地に広まった","室町時代に西日本に広まり、江戸時代に各地に広まった","奈良時代に全国に広まった","室町時代に東日本だけで行われた"], a:0, choiceOnly:true, note:"二毛作は鎌倉時代には西日本に広まり、室町時代に各地に広まりました。"},
+  {era:"bunka", q:"瀬戸（現在の愛知県）の特産品は何ですか。", choices:["絹織物","和紙","焼き物","綿花"], a:2, note:"瀬戸（愛知県）は焼き物が特産品です。今でも陶磁器を「せともの」とよびます。"},
+  {era:"bunka", q:"足利義満のころの文化を何といいますか。", choices:["北山文化","東山文化","国風文化","元禄文化"], a:0, alt:["北山文化","北山"], note:"義満のころの文化を北山文化、義政のころの文化を東山文化といいます。"},
+  {era:"bunka", q:"銀閣があるお寺の名前は何ですか。", choices:["鹿苑寺","慈照寺","金剛峯寺","清水寺"], a:1, note:"銀閣は義政の別荘で、現在は慈照寺です。"},
+  {era:"bunka", q:"組み合わせとして正しいものはどれですか。", choices:["足利義満－北山文化－金閣－鹿苑寺","足利義満－東山文化－銀閣－慈照寺","足利義政－北山文化－金閣－慈照寺","足利義政－東山文化－金閣－鹿苑寺"], a:0, choiceOnly:true, note:"義満＝北山文化＝金閣＝鹿苑寺、義政＝東山文化＝銀閣＝慈照寺。よく出るので必ずセットで覚えよう。"},
+  {era:"bunka", q:"観阿弥・世阿弥父子が大成した芸能は何ですか。", choices:["能","狂言","歌舞伎","人形浄瑠璃"], a:0, alt:["能楽"], note:"観阿弥・世阿弥父子が能を大成しました。足利義満の保護を受けました。"},
+  {era:"bunka", q:"能の幕間に演じられた、こっけいな劇を何といいますか。", choices:["狂言","歌舞伎","田楽","落語"], a:0, note:"能の幕間には狂言が演じられました。"},
+  {era:"bunka", q:"「浦島太郎」などの、庶民の読み物として親しまれた物語を何といいますか。", choices:["御伽草子","源氏物語","平家物語","浮世草子"], a:0, alt:["御伽草子","おとぎ草子","お伽草子"], note:"「浦島太郎」「一寸法師」などの御伽草子が庶民の読み物として親しまれました。"},
+  {era:"bunka", q:"室町時代に、麻のほかに利用が広まった、あたたかく吸湿性が高い衣料の原料は何ですか。", choices:["木綿","絹","麻","羊毛"], a:0, alt:["木綿","綿"], note:"あたたかく吸湿性が高い木綿の利用が広まりました。"},
+  {era:"bunka", q:"1485年、国の侍（国人）と農民が守護大名の軍を追放し、8年間自治を行った一揆は何ですか。", choices:["正長の土一揆","山城国一揆","加賀の一向一揆","島原の乱"], a:1, alt:["山城国一揆","山城の国一揆"], note:"1485年の山城国一揆では、国人と農民が守護大名の軍を追放し、8年間自治を行いました。"},
+  {era:"bunka", q:"一向宗とは、何という宗派の別のよび方ですか。", choices:["浄土真宗","浄土宗","時宗","臨済宗"], a:0, note:"一向宗は浄土真宗（親鸞が開いた）のことです。法然の「浄土宗」とまちがえやすいので注意。"},
+  {era:"seiji", q:"次のできごとを古い順に正しくならべたものはどれですか。", choices:["鎌倉幕府の滅亡 → 建武の新政 → 南北朝の合一 → 応仁の乱","建武の新政 → 鎌倉幕府の滅亡 → 応仁の乱 → 南北朝の合一","鎌倉幕府の滅亡 → 南北朝の合一 → 建武の新政 → 応仁の乱","建武の新政 → 南北朝の合一 → 鎌倉幕府の滅亡 → 応仁の乱"], a:0, choiceOnly:true, note:"1333年 鎌倉幕府の滅亡 → 1334年 建武の新政 → 1392年 南北朝の合一 → 1467年 応仁の乱。"},
+  {era:"bunka", q:"次のできごとを古い順に正しくならべたものはどれですか。", choices:["金閣が建てられる → 正長の土一揆 → 応仁の乱 → 銀閣が建てられる","銀閣が建てられる → 金閣が建てられる → 応仁の乱 → 正長の土一揆","応仁の乱 → 金閣が建てられる → 正長の土一揆 → 銀閣が建てられる","金閣が建てられる → 応仁の乱 → 銀閣が建てられる → 正長の土一揆"], a:0, choiceOnly:true, note:"1397年 金閣 → 1428年 正長の土一揆 → 1467年 応仁の乱 → 1489年 銀閣。"}
+];
+
+/* ============================================================
+   APP LOGIC
+   ============================================================ */
+let state = {
+  era: "all",
+  count: "all",
+  mode: "choice",
+  pool: [],
+  idx: 0,
+  score: 0,
+  answered: false,
+  wrong: [],
+  wrongOnlyMode: false
+};
+
+const eraLabel = {seiji:"政治・外交", bunka:"産業・文化"};
+
+// references to the current 記述式 input/button (rebuilt every question,
+// so we avoid fixed ids — see submitTypedAnswer)
+let typeInputEl = null;
+let typeSubmitBtnEl = null;
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// lenient compare for typed (記述式) answers: ignore surrounding/inner
+// whitespace, full-width spaces, and common bracket/punctuation marks.
+function normalizeAnswer(str){
+  return (str || '')
+    .trim()
+    .replace(/[\s　]/g, '')
+    .replace(/[「」『』()（）,.、。・=＝]/g, '')
+    .toLowerCase();
+}
+
+/* ---- setup screen interactions ---- */
+document.querySelectorAll('#era-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#era-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.era = el.dataset.era;
+  });
+});
+document.querySelectorAll('#count-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#count-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.count = el.dataset.count;
+  });
+});
+document.querySelectorAll('#mode-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#mode-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.mode = el.dataset.mode;
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', startQuiz);
+document.getElementById('btn-retry').addEventListener('click', startQuiz);
+document.getElementById('btn-retry-wrong').addEventListener('click', startWrongOnlyQuiz);
+document.getElementById('btn-setting').addEventListener('click', ()=>{
+  showScreen('setup');
+});
+document.getElementById('btn-next').addEventListener('click', nextQuestion);
+
+function reshuffleItem(q){
+  // shuffle choice order, tracking correct index
+  const order = shuffle(q.choices.map((c,i)=>i));
+  const choices = order.map(i=>q.choices[i]);
+  const a = order.indexOf(q.a);
+  return {era:q.era, q:q.q, note:q.note, alt:q.alt, choices, a};
+}
+
+function buildPool(){
+  let base = QUESTIONS;
+  if(state.era !== 'all') base = base.filter(q=>q.era===state.era);
+  // 文章で答える問題は4択のときだけ出題
+  if(state.mode === 'type') base = base.filter(q=>!q.choiceOnly);
+
+  let pool = shuffle(base).map(reshuffleItem);
+
+  if(state.count !== 'all'){
+    pool = pool.slice(0, parseInt(state.count, 10));
+  }
+  return pool;
+}
+
+function startQuiz(){
+  state.pool = buildPool();
+  state.idx = 0;
+  state.score = 0;
+  state.wrong = [];
+  state.wrongOnlyMode = false;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function startWrongOnlyQuiz(){
+  if(state.wrong.length === 0) return;
+  const items = state.wrong.map(w => w.orig);
+  state.pool = shuffle(items).map(reshuffleItem);
+  state.idx = 0;
+  state.score = 0;
+  state.wrong = [];
+  state.wrongOnlyMode = true;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function showScreen(name){
+  document.getElementById('screen-setup').classList.toggle('hidden', name!=='setup');
+  document.getElementById('screen-quiz').classList.toggle('hidden', name!=='quiz');
+  document.getElementById('screen-result').classList.toggle('hidden', name!=='result');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+  const total = state.pool.length;
+  const item = state.pool[state.idx];
+  state.answered = false;
+
+  document.getElementById('q-counter').textContent = `問題 ${state.idx+1} / ${total}`;
+  const tag = document.getElementById('q-era-tag');
+  tag.textContent = eraLabel[item.era];
+  tag.className = 'era-tag ' + item.era;
+
+  document.getElementById('progress-fill').style.width = ((state.idx)/total*100) + '%';
+
+  document.getElementById('q-text').textContent = item.q;
+
+  const holder = document.getElementById('choices-holder');
+  holder.innerHTML = '';
+
+  if(state.mode === 'type'){
+    // build the input via createElement (not innerHTML) and give it a
+    // fresh random name/id every question, so browsers can't match it
+    // against previously-saved autofill entries and leak the answer.
+    const uniq = 'q' + state.idx + '_' + Math.random().toString(36).slice(2) + Date.now();
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'ti_' + uniq;
+    input.name = 'ti_' + uniq;
+    input.className = 'type-input';
+    input.placeholder = 'ひらがな・漢字で入力してね';
+    input.autocomplete = 'off';
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('autocorrect', 'off');
+    input.spellcheck = false;
+    // readonly-until-focus trick: most browsers refuse to offer saved
+    // autofill/prediction chips for a field that was readonly when the
+    // page loaded, even after we lift the readonly on focus.
+    input.readOnly = true;
+    input.addEventListener('focus', ()=> input.removeAttribute('readonly'), {once:true});
+
+    const hint = document.createElement('div');
+    hint.className = 'type-hint';
+    hint.textContent = '用語を正しく入力して「こたえる」を押してね';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'button';
+    submitBtn.className = 'primary';
+    submitBtn.id = 'sb_' + uniq;
+    submitBtn.textContent = 'こたえる';
+
+    holder.appendChild(input);
+    holder.appendChild(hint);
+    holder.appendChild(submitBtn);
+
+    typeInputEl = input;
+    typeSubmitBtnEl = submitBtn;
+
+    submitBtn.addEventListener('click', submitTypedAnswer);
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){ e.preventDefault(); submitTypedAnswer(); }
+    });
+    // no auto-focus on purpose: focusing an input right as it's created
+    // (before the user has tapped it) is what makes some mobile browsers
+    // treat it as "already active" and offer saved-value predictions.
+    // Waiting for a real tap keeps the readonly-until-focus trick effective.
+  } else {
+    const letters = ['A','B','C','D'];
+    item.choices.forEach((choiceText, i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${choiceText}</span>`;
+      btn.addEventListener('click', ()=>selectChoice(i, btn));
+      holder.appendChild(btn);
+    });
+  }
+
+  const explainBox = document.getElementById('explain-box');
+  explainBox.classList.remove('show');
+  document.getElementById('explain-text').textContent = '';
+
+  const reveal = document.getElementById('answer-reveal');
+  reveal.style.display = 'none';
+  reveal.innerHTML = '';
+
+  const badge = document.getElementById('result-badge');
+  badge.classList.remove('show', 'correct', 'wrong');
+  badge.textContent = '';
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.disabled = true;
+  nextBtn.textContent = (state.idx === total-1) ? '結果を見る' : '次へ';
+}
+
+function submitTypedAnswer(){
+  if(state.answered) return;
+  const item = state.pool[state.idx];
+  const input = typeInputEl;
+  const submitBtn = typeSubmitBtnEl;
+  if(!input || !submitBtn) return;
+  const userText = input.value.trim();
+  const correctText = item.choices[item.a];
+  const accepted = [correctText].concat(item.alt || []).map(normalizeAnswer);
+  const isCorrect = userText.length > 0 && accepted.includes(normalizeAnswer(userText));
+
+  state.answered = true;
+  input.disabled = true;
+  submitBtn.disabled = true;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const badge = document.getElementById('result-badge');
+  if(isCorrect){
+    state.score++;
+    badge.textContent = '⭕ 正解';
+    badge.classList.add('correct');
+  } else {
+    state.wrong.push({
+      orig: item,
+      q: item.q,
+      your: userText || '（未回答）',
+      right: correctText,
+      note: item.note
+    });
+    badge.textContent = '❌ 不正解';
+    badge.classList.add('wrong');
+  }
+  badge.classList.remove('show');
+  void badge.offsetWidth;
+  badge.classList.add('show');
+
+  const reveal = document.getElementById('answer-reveal');
+  reveal.style.display = 'block';
+  reveal.innerHTML = `正解：<b>${correctText}</b>`;
+
+  document.getElementById('explain-text').textContent = item.note;
+  document.getElementById('explain-box').classList.add('show');
+  document.getElementById('btn-next').disabled = false;
+}
+
+function selectChoice(i, btnEl){
+  if(state.answered) return;
+  state.answered = true;
+
+  const item = state.pool[state.idx];
+  const buttons = document.querySelectorAll('#choices-holder .choice-btn');
+  buttons.forEach(b=> b.disabled = true);
+
+  const badge = document.getElementById('result-badge');
+
+  if(i === item.a){
+    btnEl.classList.add('correct');
+    state.score++;
+    badge.textContent = '⭕ 正解';
+    badge.classList.add('correct');
+  } else {
+    btnEl.classList.add('wrong');
+    buttons[item.a].classList.add('correct');
+    state.wrong.push({
+      orig: item,
+      q: item.q,
+      your: item.choices[i],
+      right: item.choices[item.a],
+      note: item.note
+    });
+    badge.textContent = '❌ 不正解';
+    badge.classList.add('wrong');
+  }
+  // restart animation even if same class was already shown
+  badge.classList.remove('show');
+  void badge.offsetWidth;
+  badge.classList.add('show');
+
+  document.getElementById('explain-text').textContent = item.note;
+  document.getElementById('explain-box').classList.add('show');
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQuestion(){
+  const total = state.pool.length;
+  if(state.idx < total-1){
+    state.idx++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz(){
+  const total = state.pool.length;
+  document.getElementById('progress-fill').style.width = '100%';
+
+  document.getElementById('res-score').textContent = state.score;
+  document.getElementById('res-total').textContent = total;
+
+  const pct = Math.round((state.score/total)*100);
+  let msg = '';
+  if(pct === 100) msg = '満点！ すばらしい！';
+  else if(pct >= 80) msg = 'とてもよくできました！';
+  else if(pct >= 60) msg = 'もう少し！ 見直してみよう';
+  else msg = 'ノートを見直して、もう一度挑戦しよう';
+  const modeNote = state.wrongOnlyMode ? '（まちがえた問題のみ）' : '';
+  document.getElementById('res-msg').textContent = `正答率 ${pct}％　${msg}${modeNote}`;
+
+  const retryWrongBtn = document.getElementById('btn-retry-wrong');
+  if(state.wrong.length > 0){
+    retryWrongBtn.style.display = 'block';
+    retryWrongBtn.textContent = `間違えた${state.wrong.length}問だけやり直す`;
+  } else {
+    retryWrongBtn.style.display = 'none';
+  }
+
+  const reviewHolder = document.getElementById('review-holder');
+  reviewHolder.innerHTML = '';
+  if(state.wrong.length > 0){
+    const title = document.createElement('h2');
+    title.className = 'section-title';
+    title.textContent = '間違えた問題の復習';
+    reviewHolder.appendChild(title);
+
+    state.wrong.forEach(w=>{
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <div class="review-q">${w.q}</div>
+        <div class="review-a">あなたの答え：<span class="your">${w.your}</span>　→　正解：<span class="right">${w.right}</span></div>
+        <div class="review-a" style="margin-top:4px;">${w.note}</div>
+      `;
+      reviewHolder.appendChild(div);
+    });
+  }
+
+  showScreen('result');
+}
+</script>
+</body>
+</html>
